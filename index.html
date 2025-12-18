@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>BanglaFlix</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter}
+body{background:#000;color:#fff;overflow-x:hidden}
+header{position:fixed;top:0;left:0;width:100%;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;background:linear-gradient(180deg,rgba(0,0,0,.95),rgba(0,0,0,0));z-index:1000}
+header img{height:42px}
+.search{background:#111;border:none;color:#fff;padding:10px 14px;border-radius:6px;width:240px}
+.hero{height:100vh;background:linear-gradient(90deg,rgba(0,0,0,.9),rgba(0,0,0,.25)),url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba");background-size:cover;background-position:center;display:flex;align-items:center;padding:0 64px}
+.hero h1{font-size:64px;font-weight:800;line-height:1.1}
+.hero p{margin-top:18px;font-size:18px;color:#ddd}
+section{padding:42px 48px}
+.slider{display:flex;gap:18px;overflow-x:auto;scroll-behavior:smooth;padding-bottom:18px}
+.card{min-width:220px;height:330px;border-radius:12px;overflow:hidden;position:relative;cursor:pointer;transform:scale(.9);transition:.35s;background:#111}
+.card img{width:100%;height:100%;object-fit:cover}
+.card video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+.card:hover{transform:scale(1.18);z-index:30}
+.card:hover video{display:block}
+.card::after{content:"▶";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:56px;background:rgba(0,0,0,.35);opacity:0;transition:.3s}
+.card:hover::after{opacity:1}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.96);display:none;align-items:center;justify-content:center;z-index:5000}
+.modal iframe{width:86vw;height:48vw;max-width:1200px;max-height:675px;border-radius:12px}
+::-webkit-scrollbar{height:6px}
+::-webkit-scrollbar-thumb{background:#e50914;border-radius:8px}
+@media(max-width:768px){
+header{padding:0 20px}
+.hero{padding:0 20px}
+.hero h1{font-size:42px}
+.search{width:160px}
+.card{min-width:170px;height:260px}
+}
+</style>
+</head>
+<body>
+
+<header>
+<img src="https://img.icons8.com/?size=100&id=OGorCfaq39bR&format=png&color=000000">
+<input class="search" placeholder="Search movie">
+</header>
+
+<div class="hero">
+<div>
+<h1>BanglaFlix</h1>
+<p>শুধু যাচাইকৃত বাংলা সিনেমা ট্রেলার</p>
+</div>
+</div>
+
+<section>
+<div class="slider" id="movieRow"></div>
+</section>
+
+<div class="modal" id="modal">
+<iframe src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</div>
+
+<script>
+const data=[
+{t:"Pather Panchali",id:"ROKqa4xd1V4"},
+{t:"Seemana Periye",id:"B8NE6AFExXQ"},
+{t:"Charulata",id:"hvMSSBSCXns"},
+{t:"Baishe Srabon",id:"3BWJyeyjZn4"},
+{t:"Tagar",id:"u72AxAF_uGU"},
+{t:"Dhumketu",id:"Nh-AxLlZejo"}
+]
+
+const row=document.getElementById("movieRow")
+const modal=document.getElementById("modal")
+const frame=modal.querySelector("iframe")
+const search=document.querySelector(".search")
+
+function render(list){
+row.innerHTML=""
+list.forEach(m=>{
+const c=document.createElement("div")
+c.className="card"
+c.innerHTML=`<img src="https://img.youtube.com/vi/${m.id}/maxresdefault.jpg"><video muted loop src="https://www.youtube.com/embed/${m.id}"></video>`
+c.onclick=()=>{
+frame.src=`https://www.youtube.com/embed/${m.id}?autoplay=1`
+modal.style.display="flex"
+}
+row.appendChild(c)
+})
+}
+
+render(data)
+
+search.oninput=()=>{
+const q=search.value.toLowerCase()
+render(data.filter(m=>m.t.toLowerCase().includes(q)))
+}
+
+modal.onclick=()=>{
+frame.src=""
+modal.style.display="none"
+}
+
+document.addEventListener("keydown",e=>{
+if(e.key==="Escape"){
+frame.src=""
+modal.style.display="none"
+}
+})
+</script>
+
+</body>
+</html>
